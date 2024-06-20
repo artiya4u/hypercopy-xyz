@@ -1,75 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 50 50"
-   version="1.1"
-   class="jsx-2263963463 artboard-inner"
-   style="width: 300px; height: 300px; max-height: 100%;"
-   id="svg3"
-   sodipodi:docname="favicon.svg"
-   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs3" />
-  <sodipodi:namedview
-     id="namedview3"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="4.72"
-     inkscape:cx="25"
-     inkscape:cy="24.894068"
-     inkscape:window-width="1800"
-     inkscape:window-height="1040"
-     inkscape:window-x="0"
-     inkscape:window-y="44"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="g3" />
-  <g
-     transform="translate(25 25) scale(1.4285714285714286)"
-     id="lockup4-icon">
-    <g
-       fill="#FFFFFF"
-       id="g3">
-      <g
-         transform="translate(-17.5 -17.5) scale(0.3431372549019608)"
-         id="container">
-        <g
-           fill="#FFFFFF"
-           id="g1">
-          <polygon
-             vector-effect="non-scaling-stroke"
-             points="1 101 101 101 101 1 1 1"
-             id="polygon1" />
+<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="jsx-2263963463 artboard-inner" style="width: 300px; height: 300px; max-height: 100%;">
+    <g transform="translate(25 25) scale(2)" id="lockup4-icon">
+        <g fill="#dead00">
+            <g transform="translate(-17.5 -17.5) scale(0.3431372549019608)" id="container">
+                <g fill="#000000">
+                    <polygon vector-effect="non-scaling-stroke" points="1 101 101 101 101 1 1 1"></polygon>
+                </g>
+            </g>
+            <g transform="translate(-10.001008061564118 -9.909103040213804) scale(0.2020161231282352)" id="icon">
+                <g fill="#DEAD00">
+                    <circle cx="21.172" cy="49.464" r="7"></circle>
+                    <circle cx="78.828" cy="49.464" r="7"></circle>
+                    <path d="M99.457 48.606c-.453-11.016-9.502-19.814-20.629-19.814-2.979 0-5.804.643-8.362 1.777l-.023-.004c-5.47 2.749-12.158 5.269-19.942 5.269-7.762 0-15.113-1.989-20.699-5.241l-.154.03a20.57 20.57 0 0 0-8.474-1.831C10.041 28.792.988 37.6.544 48.624a8.393 8.393 0 0 0-.044.84c0 .275.016.551.042.825.437 11.031 9.492 19.848 20.631 19.848 2.647 0 5.17-.517 7.497-1.424l.035.008.178-.085a20.594 20.594 0 0 0 2.414-1.158c5.129-2.452 11.022-5.051 17.918-5.051 7.568 0 14.097 2.374 19.608 5.121.263.146.536.273.805.407.232.119.466.238.694.358l.035-.007a20.564 20.564 0 0 0 8.473 1.83c11.134 0 20.186-8.809 20.63-19.834.026-.278.042-.558.042-.839a10.225 10.225 0 0 0-.045-.857zm-78.284 14.86c-7.733 0-14.001-6.27-14.001-14.003 0-7.73 6.269-14 14.001-14 7.731 0 13.999 6.27 13.999 14 0 7.733-6.267 14.003-13.999 14.003zm57.655-.002c-7.73 0-14-6.267-14-14 0-7.729 6.27-14 14-14 7.733 0 14 6.271 14 14 0 7.733-6.266 14-14 14z"></path>
+                </g>
+            </g>
         </g>
-      </g>
-      <g
-         transform="matrix(0.29189617,0,0,0.49256424,-14.5951,-24.364444)"
-         id="icon">
-        <g
-           fill="#232323"
-           id="g2">
-          <circle
-             cx="21.172001"
-             cy="49.464001"
-             r="7"
-             id="circle1" />
-          <circle
-             cx="78.828003"
-             cy="49.464001"
-             r="7"
-             id="circle2" />
-          <path
-             d="M 99.457,48.606 C 99.004,37.59 89.955,28.792 78.828,28.792 c -2.979,0 -5.804,0.643 -8.362,1.777 l -0.023,-0.004 c -5.47,2.749 -12.158,5.269 -19.942,5.269 -7.762,0 -15.113,-1.989 -20.699,-5.241 l -0.154,0.03 A 20.57,20.57 0 0 0 21.174,28.792 C 10.041,28.792 0.988,37.6 0.544,48.624 A 8.393,8.393 0 0 0 0.5,49.464 c 0,0.275 0.016,0.551 0.042,0.825 0.437,11.031 9.492,19.848 20.631,19.848 2.647,0 5.17,-0.517 7.497,-1.424 l 0.035,0.008 0.178,-0.085 a 20.594,20.594 0 0 0 2.414,-1.158 c 5.129,-2.452 11.022,-5.051 17.918,-5.051 7.568,0 14.097,2.374 19.608,5.121 0.263,0.146 0.536,0.273 0.805,0.407 0.232,0.119 0.466,0.238 0.694,0.358 l 0.035,-0.007 a 20.564,20.564 0 0 0 8.473,1.83 c 11.134,0 20.186,-8.809 20.63,-19.834 0.026,-0.278 0.042,-0.558 0.042,-0.839 a 10.225,10.225 0 0 0 -0.045,-0.857 z m -78.284,14.86 c -7.733,0 -14.001,-6.27 -14.001,-14.003 0,-7.73 6.269,-14 14.001,-14 7.731,0 13.999,6.27 13.999,14 0,7.733 -6.267,14.003 -13.999,14.003 z m 57.655,-0.002 c -7.73,0 -14,-6.267 -14,-14 0,-7.729 6.27,-14 14,-14 7.733,0 14,6.271 14,14 0,7.733 -6.266,14 -14,14 z"
-             id="path2" />
-        </g>
-      </g>
     </g>
-  </g>
 </svg>

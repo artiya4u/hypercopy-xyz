@@ -5,9 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hypercopy - A hyper stupid copy trade service on Hyperliquid</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <script src="https://unpkg.com/htmx.org@2.0.0" integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@4.3.49/dist/ccxt.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script>
+        function copy() {
+            const trader = document.getElementById('trader').value
+            const value = document.getElementById('value').value
+            const address = document.getElementById('address').value
+            const apikey = document.getElementById('apikey').value
+
+            if (!trader || !value || !address || !apikey) {
+                alert('Please fill all fields.')
+                return
+            }
+
+            const trader_account = new ccxt.hyperliquid({
+                'address': trader
+            })
+
+            const trader_balance = trader_account.fetch_balance()
+            if (trader_balance.free < value) {
+                alert('Trader balance is not enough.')
+                return
+            }
+
+            const account = new ccxt.hyperliquid({
+                'address': address,
+                'apiKey': apikey
+            })
+
+            const balance = account.fetch_balance()
+            if (balance.free < value) {
+                alert('Your balance is not enough.')
+                return
+            }
+
+            const trades = trader_account.fetch_my_trades()
+            for (const trade of trades) {
+                if (trade.side === 'buy') {
+                    account.create_market_sell_order(trade.symbol, trade.amount)
+                } else {
+                    account.create_market_buy_order(trade.symbol, trade.amount)
+                }
+            }
+        }
+
+    </script>
 </head>
 <body>
 <div class="col-lg-8 mx-auto p-4 py-md-5">
@@ -24,54 +69,53 @@
         </div>
         <div class="col-md-7 col-lg-8">
             <h4 class="mb-3">Copy a Trader</h4>
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation">
                 <div class="row g-3">
                     <div class="col-12">
-                        <label for="trader" class="form-label">Trader address</label>
-                        <input type="text" class="form-control" id="trader" placeholder="0x8888888888888888888888888888888888888888" value="" required>
-                        <div class="invalid-feedback">
-                            Valid trader address is required.
-                        </div>
+                        <label for="trader" class="form-label">Trader address
+                            <a href="https://app.hyperliquid.xyz/leaderboard" target="_blank">
+                                <span class="text-body-secondary">Top Traders</span>
+                            </a></label>
+                        <input type="text" class="form-control" id="trader" required
+                               placeholder="0x8888888888888888888888888888888888888888"
+                               pattern="^(0x)?[0-9a-fA-F]{40}$">
                     </div>
 
                     <div class="col-12">
                         <label for="value" class="form-label">
                             Your value per trade
                             <span class="text-body-secondary">
-                                (regardless of the trader's trade value)
+                                (USDC)
                             </span>
                         </label>
-                        <input type="number" class="form-control" id="value" placeholder="20" value="" required>
-                        <div class="invalid-feedback">
-                            Valid value is required.
-                        </div>
+                        <input type="number" class="form-control" id="value" placeholder="20" value="" required min="12">
                     </div>
 
                     <div class="col-12">
-                        <label for="address" class="form-label">Your wallet address</label>
-                        <input type="text" class="form-control" id="address" placeholder="0x0000000000000000000000000000000000000000" required>
-                        <div class="invalid-feedback">
-                            Please enter your wallet address.
-                        </div>
+                        <label for="address" class="form-label">
+                            Your funded wallet address
+                        </label>
+                        <input type="text" class="form-control" id="address" required
+                               placeholder="0x0000000000000000000000000000000000000000"
+                               pattern="^(0x)?[0-9a-fA-F]{40}$">
                     </div>
 
                     <div class="col-12">
                         <label for="apikey" class="form-label">API Key
                             <a href="https://app.hyperliquid.xyz/API" target="_blank">
-                                <span class="text-body-secondary">(https://app.hyperliquid.xyz/API)</span>
+                                <span class="text-body-secondary">Create API Key</span>
                             </a>
                         </label>
-                        <input type="password" class="form-control" id="apikey" placeholder="0x4bee236e6b3b79c458ea877e969ddf85ee6d2b30189652921ef4641b73748edb">
-                        <div class="invalid-feedback">
-                            Please enter a valid API Key.
-                        </div>
+                        <input type="password" class="form-control" id="apikey" required
+                               placeholder="0x4bee236e6b3b79c458ea877e969ddf85ee6d2b30189652921ef4641b73748edb"
+                               pattern="^(0x)?[0-9a-fA-F]{64}$">
                     </div>
 
                 </div>
 
                 <hr class="my-4">
 
-                <button class="w-100 btn btn-primary btn-lg" type="submit">Copy</button>
+                <button class="w-100 btn btn-primary btn-lg" onsubmit="copy()">Copy</button>
             </form>
         </div>
     </main>
