@@ -186,7 +186,7 @@
             let last_order_elm = document.getElementById('lastOrdersList')
             last_order_elm.innerHTML = ''
             // last 6 orders
-            let last_orders = orders.slice(Math.max(orders.length - 6, 1)).reverse();
+            let last_orders = orders.slice(Math.max(orders.length - 6, 0)).reverse();
             for (const order of last_orders) {
                 let textClass = order.side === 'buy' ? 'text-success' : 'text-danger'
                 let sideSign = order.side === 'buy' ? '+' : '-'
