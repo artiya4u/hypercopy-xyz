@@ -101,21 +101,8 @@
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                         <span class="mb-3">Latest Orders</span>
                     </h4>
-                    <ul class="list-group mb-3">
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div class="text-success">
-                                <h6 class="mb-3">BTC</h6>
-                                <small class="text-body-secondary">5 secs</small>
-                            </div>
-                            <div><span class="text-success">+0.001</span></div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div class="text-danger">
-                                <h6 class="mb-3">ETH</h6>
-                                <small class="text-body-secondary">10 secs</small>
-                            </div>
-                            <div><span class="text-danger">-0.08</span></div>
-                        </li>
+                    <ul class="list-group mb-3" id="lastOrdersList">
+
                     </ul>
                 </div>
             </div>
@@ -128,7 +115,9 @@
         let running = false;
         let traderAccount = null;
         let userAccount = null;
+        let orders = [];
         let actionBtn = document.getElementById('actionBtn')
+
 
         async function copy() {
             if (running) {
@@ -164,20 +153,53 @@
             console.log(`Starting copy trading ${trader} -> ${address} with ${value} USDC.`)
             let startTime = Date.now()
             while (running) {
-                const trades = await traderAccount.watchMyTrades()
-                for (const trade of trades) {
-                    if (trade.timestamp < startTime) {
-                        continue
+                try {
+                    const trades = await traderAccount.watchMyTrades()
+                    for (const trade of trades) {
+                        if (trade.timestamp < startTime) {
+                            continue
+                        }
+                        try {
+                            let trade_amount = value / trade.price
+                            let order = await userAccount.create_order(trade.symbol, 'limit', trade.side, trade_amount, trade.price)
+                            let order_details = await userAccount.fetch_order(order.id, trade.symbol)
+                            console.log(order_details)
+                            let orderAmount = order_details.amount ? order_details.amount : order_details.info.order.origSz
+                            orders.push({
+                                symbol: order_details.symbol.split('/')[0],
+                                side: order_details.side,
+                                amount: orderAmount,
+                                timestamp: order_details.timestamp
+                            })
+                            updateOrders()
+                        } catch (e) {
+                            console.log(e.toString())
+                        }
                     }
-                    try {
-                        console.log(trade)
-                        let trade_amount = value / trade.price
-                        let order = await userAccount.create_order(trade.symbol, 'limit', trade.side, trade_amount, trade.price)
-                        console.log(order)
-                    } catch (e) {
-                        console.log(e.toString())
-                    }
+                } catch (e) {
+                    console.log('watchMyTrades error', e.toString())
                 }
+            }
+        }
+
+        function updateOrders() {
+            let last_order_elm = document.getElementById('lastOrdersList')
+            last_order_elm.innerHTML = ''
+            // last 6 orders
+            let last_orders = orders.reverse().slice(0, 6)
+            for (const order of last_orders) {
+                let textClass = order.side === 'buy' ? 'text-success' : 'text-danger'
+                let sideSign = order.side === 'buy' ? '+' : '-'
+                let formattedAmount = parseFloat(order.amount).toPrecision(4)
+                let formattedTimestamp = new Date(order.timestamp).toLocaleTimeString()
+                last_order_elm.innerHTML += `
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div class="${textClass}">
+                        <h6>${order.symbol}</h6>
+                        <small class="text-body-secondary">${formattedTimestamp}</small>
+                    </div>
+                    <span class="${textClass}">${sideSign}${formattedAmount}</span>
+                </li>`
             }
         }
 
