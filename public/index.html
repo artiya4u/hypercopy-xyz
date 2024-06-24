@@ -8,24 +8,26 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@4.3.49/dist/ccxt.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<style>
-    .btn-bd-primary {
-        --bd-dead-bg: #dead69;
-        --bd-dead-rgb: #dead69;
+    <style>
+        :root {
+            --primary-color: #dead69;
+            --bd-primary-bg: #dead69;
+        }
 
-        --bs-btn-font-weight: 600;
-        --bs-btn-color: var(--bs-white);
-        --bs-btn-bg: var(--bd-dead-bg);
-        --bs-btn-border-color: var(--bd-dead-bg);
-        --bs-btn-hover-color: var(--bs-white);
-        --bs-btn-hover-bg: #dead42;
-        --bs-btn-hover-border-color: #dead42;
-        --bs-btn-focus-shadow-rgb: var(--bd-dead-rgb);
-        --bs-btn-active-color: var(--bs-btn-hover-color);
-        --bs-btn-active-bg: #dead42;
-        --bs-btn-active-border-color: #dead42;
-    }
-</style>
+        .btn-bd-primary {
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: var(--bs-white);
+            --bs-btn-bg: var(--primary-color);
+            --bs-btn-border-color: var(--bd-primary-bg);
+            --bs-btn-hover-color: var(--bs-white);
+            --bs-btn-hover-bg: #dead42;
+            --bs-btn-hover-border-color: #dead42;
+            --bs-btn-focus-shadow-rgb: var(--primary-color);
+            --bs-btn-active-color: var(--bs-btn-hover-color);
+            --bs-btn-active-bg: #dead42;
+            --bs-btn-active-border-color: #dead42;
+        }
+    </style>
 </head>
 <body>
 <div class="col-lg-8 mx-auto p-4 py-md-5">
@@ -33,66 +35,92 @@
         <img src="logo.svg" height="50" width="50" alt="Hypercopy Logo"/> &nbsp;
         <span class="fs-2">Hypercopy</span>
     </header>
-    <main>
-        <div class="py-1 text-center">
-            <h2>Start copy trading on Hyperliquid</h2>
-            <p class="lead">
-                Hypercopy is a hyper stupid copy trade service on Hyperliquid. <br>
-                Hypercopy works securely inside your browser and will stop when this page close.
-            </p>
-        </div>
-        <div class="col-md-7 col-lg-8">
-            <h4 class="mb-3">Copy a Trader</h4>
-            <form action="javascript:copy()">
-                <div class="row g-3">
-                    <div class="col-12">
-                        <label for="trader" class="form-label">Trader address
-                            <a href="https://app.hyperliquid.xyz/leaderboard" target="_blank">
-                                <span class="text-body-secondary">Top Traders</span>
-                            </a>
-                        </label>
-                        <input type="text" class="form-control" id="trader" required
-                               placeholder="0xe86b057f5eb764c9738d6b0d38170befd0723664"
-                               pattern="^(0x)?[0-9a-fA-F]{40}$">
-                    </div>
+    <div class="container">
+        <main>
+            <div class="py-1 text-center">
+                <h2>Start copy trading on Hyperliquid</h2>
+                <p class="lead">
+                    Hypercopy is a hyper stupid copy trade service on Hyperliquid. <br>
+                    Hypercopy works securely inside your browser and will stop when this page close.
+                </p>
+            </div>
+            <div class="row g-5">
 
-                    <div class="col-12">
-                        <label for="value" class="form-label">
-                            Your value per trade
-                            <span class="text-body-secondary">
+                <div class="col-md-7 col-lg-8">
+                    <h4 class="mb-3">Copy a Trader</h4>
+                    <form action="javascript:copy()">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="trader" class="form-label">Trader address
+                                    <a href="https://app.hyperliquid.xyz/leaderboard" target="_blank">
+                                        <span class="text-body-secondary">Top Traders</span>
+                                    </a>
+                                </label>
+                                <input type="text" class="form-control" id="trader" required
+                                       placeholder="0xe86b057f5eb764c9738d6b0d38170befd0723664"
+                                       pattern="^(0x)?[0-9a-fA-F]{40}$">
+                            </div>
+
+                            <div class="col-12">
+                                <label for="value" class="form-label">
+                                    Your value per trade
+                                    <span class="text-body-secondary">
                                 (USDC)
                             </span>
-                        </label>
-                        <input type="number" class="form-control" id="value" placeholder="20" value="12" required min="12">
-                    </div>
+                                </label>
+                                <input type="number" class="form-control" id="value" placeholder="20" value="12" required min="12">
+                            </div>
 
-                    <div class="col-12">
-                        <label for="address" class="form-label">
-                            Your funded wallet address
-                        </label>
-                        <input type="text" class="form-control" id="address" required
-                               placeholder="0x0000000000000000000000000000000000000000"
-                               pattern="^(0x)?[0-9a-fA-F]{40}$">
-                    </div>
+                            <div class="col-12">
+                                <label for="address" class="form-label">
+                                    Your funded wallet address
+                                </label>
+                                <input type="text" class="form-control" id="address" required
+                                       placeholder="0x0000000000000000000000000000000000000000"
+                                       pattern="^(0x)?[0-9a-fA-F]{40}$">
+                            </div>
 
-                    <div class="col-12">
-                        <label for="apikey" class="form-label">API Key
-                            <a href="https://app.hyperliquid.xyz/API" target="_blank">
-                                <span class="text-body-secondary">Create API Key</span>
-                            </a>
-                        </label>
-                        <input type="password" class="form-control" id="apikey" required
-                               placeholder="0x4bee236e6b3b79c458ea877e969ddf85ee6d2b30189652921ef4641b73748edb"
-                               pattern="^(0x)?[0-9a-fA-F]{64}$">
-                    </div>
+                            <div class="col-12">
+                                <label for="apikey" class="form-label">API Key
+                                    <a href="https://app.hyperliquid.xyz/API" target="_blank">
+                                        <span class="text-body-secondary">Create API Key</span>
+                                    </a>
+                                </label>
+                                <input type="password" class="form-control" id="apikey" required
+                                       placeholder="0x4bee236e6b3b79c458ea877e969ddf85ee6d2b30189652921ef4641b73748edb"
+                                       pattern="^(0x)?[0-9a-fA-F]{64}$">
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <button class="w-100 btn btn-bd-primary btn-lg" id="actionBtn">Copy</button>
+                    </form>
                 </div>
-
-                <hr class="my-4">
-
-                <button class="w-100 btn btn-bd-primary btn-lg" id="actionBtn">Copy</button>
-            </form>
-        </div>
-    </main>
+                <div class="col-md-5 col-lg-4 order-md-last">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="mb-3">Latest Orders</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div class="text-success">
+                                <h6 class="mb-3">BTC</h6>
+                                <small class="text-body-secondary">5 secs</small>
+                            </div>
+                            <div><span class="text-success">+0.001</span></div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div class="text-danger">
+                                <h6 class="mb-3">ETH</h6>
+                                <small class="text-body-secondary">10 secs</small>
+                            </div>
+                            <div><span class="text-danger">-0.08</span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
     <footer class="pt-5 my-5 text-body-secondary border-top">
         Made with ❤️ by @artiya4u &middot; &copy; 2024
     </footer>
