@@ -1,6 +1,6 @@
-# Hypercopy
+# [hypercopy.xyz](https://hypercopy.xyz)
 
-A hyper stupid copy trade service for Hyperliquid.
+A hyper stupid copy trade service for [Hyperliquid](https://app.hyperliquid.xyz).
 
 ## Features
 
