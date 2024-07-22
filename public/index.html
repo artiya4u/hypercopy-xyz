@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hypercopy - A hyper stupid copy trade service for Hyperliquid</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@4.3.49/dist/ccxt.browser.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@4.3.66/dist/ccxt.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
@@ -183,12 +183,13 @@
                             }
 
                             let trade_amount = value / trade.price
+                            console.log(`Copying ${trade.side} ${trade_amount} ${trade.symbol} at ${trade.price} from ${trader}`)
                             let order = await userAccount.create_order(trade.symbol, 'limit', trade.side, trade_amount, trade.price)
                             let order_details = await userAccount.fetch_order(order.id, trade.symbol)
                             console.log(order_details)
                             let orderAmount = order_details.amount ? order_details.amount : order_details.info.order.origSz
                             orders.push({
-                                symbol: order_details.symbol.split('/')[0],
+                                symbol: order_details.symbol,
                                 side: order_details.side,
                                 amount: orderAmount,
                                 timestamp: order_details.timestamp
