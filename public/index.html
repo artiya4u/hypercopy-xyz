@@ -1,251 +1,358 @@
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hypercopy - A hyper stupid copy trade service for Hyperliquid</title>
-    <link rel="icon" type="image/svg+xml" href="logo.svg">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@4.3.66/dist/ccxt.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        :root {
-            --primary-color: #dead69;
-            --bd-primary-bg: #dead69;
-        }
-
-        .btn-bd-primary {
-            --bs-btn-font-weight: 600;
-            --bs-btn-color: var(--bs-white);
-            --bs-btn-bg: var(--primary-color);
-            --bs-btn-border-color: var(--bd-primary-bg);
-            --bs-btn-hover-color: var(--bs-white);
-            --bs-btn-hover-bg: #dead42;
-            --bs-btn-hover-border-color: #dead42;
-            --bs-btn-focus-shadow-rgb: var(--primary-color);
-            --bs-btn-active-color: var(--bs-btn-hover-color);
-            --bs-btn-active-bg: #dead42;
-            --bs-btn-active-border-color: #dead42;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hypercopy - Copy Trading for Hyperliquid</title>
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <!-- CCXT para conexión con Hyperliquid (asumiendo soporte) -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@4.3.66/dist/ccxt.browser.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    :root {
+      --primary-color: #dead69;
+      --secondary-color: #343a40;
+      --light-color: #f8f9fa;
+    }
+    body {
+      background-color: var(--secondary-color);
+      color: var(--light-color);
+    }
+    .card {
+      background-color: #212529;
+      border: none;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .card-header {
+      background-color: var(--primary-color);
+      color: #212529;
+      font-weight: 600;
+    }
+    .btn-bd-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: #212529;
+      font-weight: 600;
+    }
+    .btn-bd-primary:hover {
+      background-color: #dead42;
+      border-color: #dead42;
+      color: #212529;
+    }
+    .session-row {
+      cursor: pointer;
+    }
+    .session-details {
+      background-color: #343a40;
+      color: var(--light-color);
+    }
+    /* Estilos para el contenedor general de logs */
+    #generalLogs {
+      max-height: 250px;
+      overflow-y: auto;
+    }
+    /* Ajuste para la tabla */
+    table th, table td {
+      vertical-align: middle;
+    }
+  </style>
 </head>
 <body>
-<div class="col-lg-8 mx-auto p-4 py-md-5">
-    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
-        <img src="logo.svg" height="50" width="50" alt="Hypercopy Logo"/> &nbsp;
-        <span class="fs-2">Hypercopy</span>
+  <div class="container my-5">
+    <header class="mb-4 text-center">
+      <img src="logo.svg" alt="Hypercopy Logo" width="50" height="50">
+      <h1 class="mt-2">Hypercopy</h1>
+      <p class="lead">Copy Trading for Hyperliquid</p>
     </header>
-    <div class="container">
-        <main>
-            <div class="py-1 text-center">
-                <h2>Start copy trading on Hyperliquid</h2>
-                <p class="lead">
-                    Hypercopy is a hyper stupid copy trade service for Hyperliquid.<br>
-                    Hypercopy works securely inside your browser and will stop when this page close.
-                </p>
+
+    <!-- Formulario de creación de sesión en un card -->
+    <div class="card mb-4">
+      <div class="card-header">
+        Create Copy Trading Session
+      </div>
+      <div class="card-body">
+        <form id="copyForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="trader" class="form-label">Trader Address <small class="text-muted">(see <a href="https://app.hyperliquid.xyz/leaderboard" target="_blank" class="link-light">Top Traders</a>)</small></label>
+              <input type="text" class="form-control" id="trader" required placeholder="0xe86b057f5eb764c9738d6b0d38170befd0723664" pattern="^(0x)?[0-9a-fA-F]{40}$">
             </div>
-            <div class="row g-5">
-
-                <div class="col-md-7 col-lg-8">
-                    <h4 class="mb-3">Copy a Trader</h4>
-                    <form action="javascript:copy()">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label for="trader" class="form-label">Trader address
-                                    <a href="https://app.hyperliquid.xyz/leaderboard" target="_blank">
-                                        <span class="text-body-secondary">Top Traders</span>
-                                    </a>
-                                </label>
-                                <input type="text" class="form-control" id="trader" required
-                                       placeholder="0xe86b057f5eb764c9738d6b0d38170befd0723664"
-                                       pattern="^(0x)?[0-9a-fA-F]{40}$">
-                            </div>
-
-                            <div class="col-7">
-                                <label for="value" class="form-label">
-                                    Your value per trade
-                                    <span class="text-body-secondary">(USDC)</span>
-                                </label>
-                                <input type="number" class="form-control" id="value" placeholder="20" value="12" required min="12">
-                            </div>
-                            <div class="col-5">
-                                <label for="maxLeverage" class="form-label">
-                                    Max Leverage
-                                    <span class="text-body-secondary">(x)</span>
-                                </label>
-                                <input type="number" class="form-control" id="maxLeverage" placeholder="5" value="5" required min="1" max="50">
-                            </div>
-
-                            <div class="col-12">
-                                <label for="address" class="form-label">
-                                    Your funded wallet address
-                                </label>
-                                <input type="text" class="form-control" id="address" required
-                                       placeholder="0x0000000000000000000000000000000000000000"
-                                       pattern="^(0x)?[0-9a-fA-F]{40}$">
-                            </div>
-
-                            <div class="col-12">
-                                <label for="apikey" class="form-label">API Key
-                                    <a href="https://app.hyperliquid.xyz/API" target="_blank">
-                                        <span class="text-body-secondary">Create API Key</span>
-                                    </a>
-                                </label>
-                                <input type="password" class="form-control" id="apikey" required
-                                       placeholder="0x4bee236e6b3b79c458ea877e969ddf85ee6d2b30189652921ef4641b73748edb"
-                                       pattern="^(0x)?[0-9a-fA-F]{64}$">
-                            </div>
-                        </div>
-
-                        <hr class="my-4">
-
-                        <button class="w-100 btn btn-bd-primary btn-lg" id="actionBtn">Copy</button>
-                    </form>
-                </div>
-                <div class="col-md-5 col-lg-4 order-md-last">
-                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="mb-3">Latest Orders</span>
-                    </h4>
-                    <ul class="list-group mb-3" id="lastOrdersList">
-
-                    </ul>
-                </div>
+            <div class="col-md-3">
+              <label for="value" class="form-label">Value per Trade (USDC)</label>
+              <input type="number" class="form-control" id="value" placeholder="20" value="12" required min="12">
             </div>
-        </main>
+            <div class="col-md-3">
+              <label for="maxLeverage" class="form-label">Max Leverage (x)</label>
+              <input type="number" class="form-control" id="maxLeverage" placeholder="5" value="5" required min="1" max="50">
+            </div>
+            <div class="col-md-6">
+              <label for="address" class="form-label">Your Wallet Address</label>
+              <input type="text" class="form-control" id="address" required placeholder="0x0000000000000000000000000000000000000000" pattern="^(0x)?[0-9a-fA-F]{40}$">
+            </div>
+            <div class="col-md-6">
+              <label for="apikey" class="form-label">API Key <small class="text-muted">(see <a href="https://app.hyperliquid.xyz/API" target="_blank" class="link-light">Create API Key</a>)</small></label>
+              <input type="password" class="form-control" id="apikey" required placeholder="0x4bee236e6b3b79c458ea877e969ddf85ee6d2b30189652921ef4641b73748edb" pattern="^(0x)?[0-9a-fA-F]{64}$">
+            </div>
+          </div>
+          <div class="mt-4">
+            <button type="submit" class="w-100 btn btn-bd-primary btn-lg">Start Copy Trading</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <footer class="pt-5 my-5 text-body-secondary border-top">
-        Made with ❤️ by @artiya4u &middot; &copy; 2024 &middot; <a href="https://github.com/artiya4u/hypercopy-xyz" target="_blank">GitHub</a>
-    </footer>
-    <script>
-        let running = false;
-        let traderAccount = null;
-        let userAccount = null;
-        let orders = [];
-        let actionBtn = document.getElementById('actionBtn')
 
+    <!-- Tabla de sesiones activas en un card -->
+    <div class="card mb-4">
+      <div class="card-header">
+        Active Copy Trading Sessions
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-dark table-striped m-0" id="sessionsTable">
+          <thead>
+            <tr>
+              <th>Trader</th>
+              <th>Wallet</th>
+              <th>Value (USDC)</th>
+              <th>Start Time</th>
+              <th>Duration</th>
+              <th># Trades</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="sessionsTableBody">
+            <!-- Filas dinámicas -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        async function copy() {
-            if (running) {
-                await stop()
-                return
-            }
+    <!-- Sección general de logs en un card -->
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>General Logs</span>
+        <button id="toggleLogsBtn" class="btn btn-sm btn-secondary" title="Toggle Logs">
+          &#128065;
+        </button>
+      </div>
+      <div id="generalLogs" class="card-body" style="font-size: 0.9rem;">
+        <p class="mb-0"><em>Awaiting actions...</em></p>
+      </div>
+    </div>
+  </div>
 
-            const trader = document.getElementById('trader').value
-            const value = document.getElementById('value').value
-            const address = document.getElementById('address').value
-            const apikey = document.getElementById('apikey').value
-            const maxLeverage = document.getElementById('maxLeverage').value
+  <footer class="container text-center mt-5 mb-3">
+    <p>Made with ❤️ by @artiya4u &middot; &copy; 2024 &middot; <a href="https://github.com/artiya4u/hypercopy-xyz" class="link-light" target="_blank">GitHub</a></p>
+  </footer>
 
-            if (!trader || !value || !address || !apikey || !maxLeverage) {
-                alert('Please fill all fields.')
-                return
-            }
+  <script>
+    // Variables para manejar sesiones y logs generales
+    let sessions = [];
+    let sessionCounter = 0;
+    const generalLogsBody = document.querySelector('#generalLogs');
 
-            const updatedLeverage = {}
-            running = true;
-            actionBtn.innerText = 'Stop'
-            // disable form fields
-            document.getElementById('trader').disabled = true
-            document.getElementById('value').disabled = true
-            document.getElementById('address').disabled = true
-            document.getElementById('apikey').disabled = true
-            document.getElementById('maxLeverage').disabled = true
+    // Manejar formulario de creación de sesión
+    document.getElementById('copyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      createSession();
+      e.target.reset();
+    });
 
-            traderAccount = new ccxt.pro.hyperliquid({
-                'walletAddress': trader
-            })
+    // Función para agregar un mensaje a los logs generales
+    function addGeneralLog(message) {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = document.createElement('p');
+      logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+      generalLogsBody.appendChild(logEntry);
+      // Scroll al final
+      generalLogsBody.scrollTop = generalLogsBody.scrollHeight;
+    }
 
-            userAccount = new ccxt.hyperliquid({
-                'walletAddress': address,
-                'privateKey': apikey
-            })
-            let markets = await userAccount.load_markets()
-            console.log(`Starting copy trading ${trader} -> ${address} with ${value} USDC.`)
-            let startTime = Date.now()
-            while (running) {
-                try {
-                    const trades = await traderAccount.watchMyTrades()
-                    for (const trade of trades) {
-                        if (trade.timestamp < startTime) {
-                            continue
-                        }
-                        try {
-                            // set leverage
-                            if (!updatedLeverage[trade.symbol]) {
-                                try {
-                                    let market = markets[trade.symbol]
-                                    let leverage = Math.min(maxLeverage, market.info.maxLeverage)
-                                    await userAccount.set_margin_mode('cross', trade.symbol, params = {leverage: leverage})
-                                } catch (e) {
-                                    console.log('set_margin_mode error', e.toString())
-                                }
-                                updatedLeverage[trade.symbol] = true
-                            }
+    // Función para crear una nueva sesión
+    function createSession() {
+      const trader = document.getElementById('trader').value;
+      const value = parseFloat(document.getElementById('value').value);
+      const maxLeverage = parseFloat(document.getElementById('maxLeverage').value);
+      const wallet = document.getElementById('address').value;
+      const apikey = document.getElementById('apikey').value;
+      const startTime = Date.now();
 
-                            let trade_amount = value / trade.price
-                            console.log(`Copying ${trade.side} ${trade_amount} ${trade.symbol} at ${trade.price} from ${trader}`)
-                            let order = await userAccount.create_order(trade.symbol, 'limit', trade.side, trade_amount, trade.price)
-                            let order_details = await userAccount.fetch_order(order.id, trade.symbol)
-                            console.log(order_details)
-                            let orderAmount = order_details.amount ? order_details.amount : order_details.info.order.origSz
-                            orders.push({
-                                symbol: order_details.symbol,
-                                side: order_details.side,
-                                amount: orderAmount,
-                                timestamp: order_details.timestamp
-                            })
-                            updateOrders()
-                        } catch (e) {
-                            console.log(e.toString())
-                        }
-                    }
-                } catch (e) {
-                    startTime = Date.now() // reset start time
-                    console.log('watchMyTrades error', e.toString())
+      const session = {
+        id: ++sessionCounter,
+        trader,
+        value,
+        maxLeverage,
+        wallet,
+        apikey,
+        startTime,
+        tradesCount: 0,
+        running: true,
+        updatedLeverage: {},
+        traderAccount: null,
+        userAccount: null,
+        tradeLogs: [],
+        row: null,
+        detailsRow: null
+      };
+
+      sessions.push(session);
+      addSessionRow(session);
+      startSession(session);
+      addGeneralLog(`Started session ${session.id} copying trader ${trader}.`);
+    }
+
+    // Función para agregar fila a la tabla de sesiones
+    function addSessionRow(session) {
+      const tbody = document.getElementById('sessionsTableBody');
+      // Fila principal de la sesión
+      const row = document.createElement('tr');
+      row.classList.add('session-row');
+      row.setAttribute('id', 'session-' + session.id);
+      row.innerHTML = `
+        <td>${session.trader}</td>
+        <td>${session.wallet}</td>
+        <td>${session.value}</td>
+        <td>${new Date(session.startTime).toLocaleTimeString()}</td>
+        <td class="duration">0 s</td>
+        <td class="tradesCount">0</td>
+        <td><button class="btn btn-sm btn-danger stopBtn" onclick="stopSession(${session.id}, event)">Stop</button></td>
+      `;
+      tbody.appendChild(row);
+      session.row = row;
+
+      // Fila para detalles (oculta inicialmente)
+      const detailsRow = document.createElement('tr');
+      detailsRow.classList.add('session-details');
+      detailsRow.setAttribute('id', 'session-details-' + session.id);
+      detailsRow.style.display = 'none';
+      detailsRow.innerHTML = `
+        <td colspan="7">
+          <strong>Trade Logs:</strong>
+          <div class="tradeLogs" style="max-height:150px; overflow-y:auto; font-size:0.85rem;">
+            <em>No trades yet.</em>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(detailsRow);
+      session.detailsRow = detailsRow;
+
+      // Alternar detalles al hacer clic en la fila (excepto en el botón Stop)
+      row.addEventListener('click', function(e) {
+        if (e.target.tagName.toLowerCase() === 'button') return;
+        toggleSessionDetails(session.id);
+      });
+    }
+
+    // Actualiza la fila de la sesión (duración y número de trades)
+    function updateSessionRow(session) {
+      if (!session.row) return;
+      const duration = Math.floor((Date.now() - session.startTime) / 1000);
+      session.row.querySelector('.duration').innerText = duration + ' s';
+      session.row.querySelector('.tradesCount').innerText = session.tradesCount;
+    }
+
+    // Función para detener una sesión
+    function stopSession(id, event) {
+      event.stopPropagation();
+      const session = sessions.find(s => s.id === id);
+      if (session && session.running) {
+        session.running = false;
+        const stopBtn = session.row.querySelector('.stopBtn');
+        stopBtn.disabled = true;
+        stopBtn.innerText = "Stopped";
+        addGeneralLog(`Session ${id} stopped.`);
+      }
+    }
+
+    // Alternar la visualización de detalles de una sesión
+    function toggleSessionDetails(id) {
+      const session = sessions.find(s => s.id === id);
+      if (!session) return;
+      session.detailsRow.style.display = session.detailsRow.style.display === 'none' ? '' : 'none';
+    }
+
+    // Función asíncrona para iniciar la sesión de copy trading
+    async function startSession(session) {
+      try {
+        // Conexión con Hyperliquid (se asume que ccxt.pro y ccxt soportan 'hyperliquid')
+        session.traderAccount = new ccxt.pro.hyperliquid({ 'walletAddress': session.trader });
+        session.userAccount = new ccxt.hyperliquid({
+          'walletAddress': session.wallet,
+          'privateKey': session.apikey
+        });
+        const markets = await session.userAccount.load_markets();
+        let loopStart = Date.now();
+
+        while (session.running) {
+          try {
+            const trades = await session.traderAccount.watchMyTrades();
+            for (const trade of trades) {
+              if (trade.timestamp < loopStart) continue;
+              try {
+                if (!session.updatedLeverage[trade.symbol]) {
+                  try {
+                    const market = markets[trade.symbol];
+                    const leverage = Math.min(session.maxLeverage, market.info.maxLeverage);
+                    await session.userAccount.set_margin_mode('cross', trade.symbol, { leverage: leverage });
+                  } catch (e) {
+                    addGeneralLog(`Session ${session.id}: Error setting leverage for ${trade.symbol} - ${e.toString()}`);
+                  }
+                  session.updatedLeverage[trade.symbol] = true;
                 }
-            }
-        }
+                const trade_amount = session.value / trade.price;
+                await session.userAccount.create_order(trade.symbol, 'limit', trade.side, trade_amount, trade.price);
+                session.tradesCount++;
 
-        function updateOrders() {
-            let last_order_elm = document.getElementById('lastOrdersList')
-            last_order_elm.innerHTML = ''
-            // last 6 orders
-            let last_orders = orders.slice(Math.max(orders.length - 6, 0)).reverse();
-            for (const order of last_orders) {
-                let textClass = order.side === 'buy' ? 'text-success' : 'text-danger'
-                let sideSign = order.side === 'buy' ? '+' : '-'
-                let formattedAmount = parseFloat(order.amount).toPrecision(4)
-                let formattedTimestamp = new Date(order.timestamp).toLocaleTimeString()
-                last_order_elm.innerHTML += `
-                <li class="list-group-item d-flex justify-content-between lh-sm">
-                    <div class="${textClass}">
-                        <h6>${order.symbol}</h6>
-                        <small class="text-body-secondary">${formattedTimestamp}</small>
-                    </div>
-                    <span class="${textClass}">${sideSign}${formattedAmount}</span>
-                </li>`
+                // Agregar log de trade a la sesión
+                const tradeLog = `<p>[${new Date(trade.timestamp).toLocaleTimeString()}] ${trade.side.toUpperCase()} ${parseFloat(trade_amount).toPrecision(4)} ${trade.symbol} @ ${trade.price}</p>`;
+                session.tradeLogs.push(tradeLog);
+                updateSessionDetails(session);
+                updateSessionRow(session);
+              } catch (e) {
+                addGeneralLog(`Session ${session.id}: Error copying trade - ${e.toString()}`);
+              }
             }
+          } catch (e) {
+            loopStart = Date.now();
+            addGeneralLog(`Session ${session.id}: Error in watchMyTrades - ${e.toString()}`);
+          }
         }
+      } catch (err) {
+        addGeneralLog(`Error starting session ${session.id}: ${err.toString()}`);
+      } finally {
+        if (session.traderAccount) await session.traderAccount.close();
+        if (session.userAccount) await session.userAccount.close();
+      }
+    }
 
-        async function stop() {
-            running = false;
-            actionBtn.innerText = 'Copy'
-            document.getElementById('trader').disabled = false
-            document.getElementById('value').disabled = false
-            document.getElementById('address').disabled = false
-            document.getElementById('apikey').disabled = false
-            document.getElementById('maxLeverage').disabled = false
-            console.log('Closing exchange accounts...')
-            if (traderAccount) {
-                await traderAccount.close()
-            }
-            if (userAccount) {
-                await userAccount.close()
-            }
-            console.log('Stopped.')
-        }
+    // Actualiza la sección de detalles (logs de trades) de una sesión
+    function updateSessionDetails(session) {
+      if (!session.detailsRow) return;
+      const container = session.detailsRow.querySelector('.tradeLogs');
+      container.innerHTML = session.tradeLogs.length ? session.tradeLogs.join('') : '<em>No trades yet.</em>';
+    }
 
-    </script>
-</div>
+    // Actualización periódica de sesiones (duración y número de trades)
+    setInterval(() => {
+      sessions.forEach(session => {
+        if (session.running) updateSessionRow(session);
+      });
+    }, 1000);
+
+    // Toggle de visualización de logs generales
+    document.getElementById('toggleLogsBtn').addEventListener('click', function() {
+      const logsCard = document.getElementById('generalLogs');
+      if (logsCard.style.display === 'none') {
+        logsCard.style.display = '';
+        this.innerHTML = "&#128065;"; // ojo abierto
+      } else {
+        logsCard.style.display = 'none';
+        this.innerHTML = "&#128584;"; // ojo cerrado
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+          crossorigin="anonymous"></script>
 </body>
 </html>
